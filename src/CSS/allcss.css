@@ -276,6 +276,7 @@
   border-radius: 10px;
   background: #dcdcdc;
 }
+
 .map_Grid {
   align-items: center;
   opacity: 0.9;
@@ -306,6 +307,11 @@
     font-weight: 600;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px !important;
+  }
+  .district_grid::-webkit-scrollbar,
+  .district_grid::-webkit-scrollbar-track,
+  .district_grid::-webkit-scrollbar-thumb {
+    visibility: hidden;
   }
 }
 .map_Grid_mobile {
