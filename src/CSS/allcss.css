@@ -159,6 +159,9 @@
     font-size: 12px !important;
   }
 }
+.typo_states {
+  font-weight: 600 !important;
+}
 .typo_states,
 .typo_districts {
   font-size: 15px;
@@ -214,9 +217,8 @@
   padding-top: 25px;
   margin-left: 2% !important;
   width: 48% !important;
-  -webkit-animation: slide-in-left 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-    both;
-  animation: slide-in-left 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  -webkit-animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   background-color: white;
   border-radius: 10px;
 }
@@ -264,4 +266,14 @@
 .district_grid::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: #e88d14;
+}
+.map_Grid {
+  align-items: center;
+  height: 70vh;
+  overflow: auto;
+  position: fixed;
+  top: 15%;
+  border-radius: 20px;
+  right: 5px !important;
+  width: 47% !important;
 }
