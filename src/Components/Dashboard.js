@@ -26,8 +26,9 @@ function Dashboard(props) {
     const [LAT, setlat] = useState(null);
     const [LNG, setlng] = useState(null);
     const [showcities, setshowcities] = useState(true);
-    const [placeName, setplaceName] = useState('india');
+    const [placeName, setplaceName] = useState(null);
     const [force, setforce] = useState(null);
+    const [mobile, setmobile] = useState(false);
 
     useEffect(() => {
         let mydata = fetch('/artivatic.json',
@@ -65,12 +66,16 @@ function Dashboard(props) {
                 getlang();
             });
         }
-
     }, [LAT, LNG, placeName, force])
 
     const pickCityGetDistrict = (str) => {
-        setforce('filled_with_new_city');
-        setplaceName(str);
+        if (window.innerWidth > 768) {
+            setforce('filled_with_new_city');
+            setplaceName(str);
+        }
+        if (mobile)
+            setmobile(false);
+            
         setshowcities(false);
         var res = str, district = [];
         if (data) {
@@ -96,6 +101,9 @@ function Dashboard(props) {
                     setlat(Number(lat));
                     setlng(Number(lng));
                     setforce('got_new_data_for_new_map');
+                    //exclusive for mobile
+                    if (window.innerWidth < 768)
+                        setmobile(true)
                 }
             }
         );
@@ -117,7 +125,7 @@ function Dashboard(props) {
                         <p style={{ fontFamily: 'ITC Charter', fontSize: '16px !important', color: 'black' }}>{localStorage.getItem('email_id')}</p></div>
                 }
                 {data &&
-                    <span style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <span style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: window.innerWidth > 768 ? '-150px' : '0' }}>
                         <p onClick={() => {
                             if (!showcities)
                                 setshowcities(true);
@@ -129,45 +137,46 @@ function Dashboard(props) {
                         {!showcities && <ArrowDropDownIcon />}
                         {showcities && <ArrowDropUpIcon />}
 
-
                     </span>
                 }
                 <Avatar title='Click to logout' onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />
             </div>
 
             <div className='bgimage'>
-
-                {data && showcities &&
-                    <Grid className='states_grid' container style={{ textAlign: 'center' }}>
-                        {data.map(item =>
-                            <Grid key={item.state} item sm={3} md={3} xs={6}>
-                                <Typography onClick={() => { pickCityGetDistrict(item.state) }} className='typo_states'>{item.state}</Typography>
-                            </Grid>
-                        )}
-                    </Grid>
-                }
-                {
-                    dismaps.length && !showcities &&
-                    <Grid container className='district_grid' style={{ textAlign: 'center' }}>
-                        {dismaps.map(item =>
-                            <Grid key={item} item sm={6} md={6} xs={6} style={{ textAlign: '-webkit-center' }}>
-                                <Typography onClick={() => {
-                                    setplaceName(item);
-                                    setforce('filled_with_new_district');
-                                }} className='typo_districts'>{item}</Typography>
-                                <br /><br />
-                            </Grid>)}
-                    </Grid>
-                }
             </div>
+            {data && showcities &&
+                <Grid className='states_grid' container style={{ textAlign: 'center' }}>
+                    {data.map(item =>
+                        <Grid key={item.state} item sm={3} md={3} xs={6}>
+                            <Typography onClick={() => { pickCityGetDistrict(item.state) }} className='typo_states'>{item.state}</Typography>
+                        </Grid>
+                    )}
+                </Grid>
+            }
             {
-                placeName && !showcities && force != 'got_new_data_for_new_map' &&
-                < Grid className='map_Grid' style={{ width: "95%", height: "95%", textAlign: 'center', marginTop: '20%' }}>
-                    <Loader type="Bars" color="#e88d14" height={80} width={80} />
+                dismaps.length && !showcities && !mobile &&
+                <Grid container className='district_grid' style={{ textAlign: 'center' }}>
+                    {dismaps.map(item =>
+                        <Grid key={item} item sm={6} md={6} xs={6} style={{ textAlign: '-webkit-center' }}>
+                            <Typography onClick={() => {
+                                setplaceName(item);
+                                setforce('filled_with_new_district');
+                                if (window.innerWidth < 768)
+                                    setmobile(true);
+                            }} className='typo_districts'>{item}</Typography>
+                            <br /><br />
+                        </Grid>)}
+                </Grid>
+            }
+
+            {
+                placeName && !showcities && force != 'got_new_data_for_new_map' && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+                < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center', marginTop: '20%' }}>
+                    <Loader type="Bars" color={window.innerWidth > 768 ? "#e88d14" : 'white'} height={80} width={80} />
                 </ Grid>
             }
-            {placeName && !showcities && force == 'got_new_data_for_new_map' &&
-                < Grid className='map_Grid' style={{ width: "95%", height: "95%", textAlign: 'center' }}>
+            {placeName && !showcities && force == 'got_new_data_for_new_map' && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+                < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center' }}>
                     {
                         placeName && force == 'got_new_data_for_new_map' &&
                         <Typography id='current_view'>You are currently viewing :&nbsp;&nbsp;{placeName}</Typography>
@@ -183,6 +192,7 @@ function Dashboard(props) {
 
                 </Grid>
             }
+
 
 
 

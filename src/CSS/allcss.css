@@ -298,3 +298,24 @@
   font-variant: small-caps;
   font-size: 15px;
 }
+@media (max-width: 768px) {
+  #current_view {
+    border-radius: 20px !important;
+    margin-top: 2px;
+    color: black;
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px !important;
+  }
+}
+.map_Grid_mobile {
+  align-items: center;
+  height: 70vh;
+  overflow: auto;
+  position: fixed;
+  top: 15%;
+  left: 2%;
+  border-radius: 20px;
+  right: 10px !important;
+  width: 96% !important;
+}
