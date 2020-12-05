@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../CSS/allcss.css';
-import { Avatar, Divider, Typography } from '@material-ui/core';
+import { Avatar, Grid, Typography } from '@material-ui/core';
 import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
@@ -108,6 +108,15 @@ function Dashboard(props) {
 
             <div className='bgimage'>
 
+                {data && showcities &&
+                    <Grid className='states_grid' container style={{ textAlign: 'center' }}>
+                        {data.map(item =>
+                            <Grid key={item.state} item sm={3} md={3}>
+                                <Typography className='typo_states'>{item.state}</Typography>
+                            </Grid>
+                        )}
+                    </Grid>
+                }
             </div>
 
 

@@ -158,3 +158,13 @@
     font-size: 12px !important;
   }
 }
+.typo_states {
+  font-size: 15px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-variant: small-caps;
+  cursor: pointer;
+}
+.states_grid {
+  position: fixed;
+  top: 20%;
+}
