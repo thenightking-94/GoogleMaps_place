@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import '../CSS/allcss.css';
 import { Avatar, Grid, Typography } from '@material-ui/core';
-import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
+import { GoogleMap, withGoogleMap, withScriptjs, Marker } from 'react-google-maps';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import Loader from 'react-loader-spinner';
+
 //seperate map component as a custom hook
 function Map() {
     return (
-        <GoogleMap defaultZoom={8}
-            defaultCenter={{ lat: Number(localStorage.getItem('lat')), lng: Number(localStorage.getItem('lng')) }} />
+        <GoogleMap defaultZoom={10}
+            defaultCenter={{ lat: Number(localStorage.getItem('lat')), lng: Number(localStorage.getItem('lng')) }} >
+            <Marker position={{ lat: Number(localStorage.getItem('lat')), lng: Number(localStorage.getItem('lng')) }} />
+        </GoogleMap>
     )
 }
 //rendering the map component as a seperate custom hook component
 const WrappedMap = withScriptjs(withGoogleMap(Map));
+
+//main method for rendering component
 function Dashboard(props) {
 
     const [data, setdata] = useState([]);
@@ -154,14 +160,27 @@ function Dashboard(props) {
                     </Grid>
                 }
             </div>
-
+            {
+                placeName && !showcities && force != 'got_new_data_for_new_map' &&
+                < Grid className='map_Grid' style={{ width: "95%", height: "95%", textAlign: 'center', marginTop: '20%' }}>
+                    <Loader type="Bars" color="#e88d14" height={80} width={80} />
+                </ Grid>
+            }
             {placeName && !showcities && force == 'got_new_data_for_new_map' &&
-                < Grid className='map_Grid' style={{ width: "95%", height: "95%" }}>
-                    <WrappedMap googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_API_KEY
-                        }`}
-                        loadingElement={<div style={{ height: `100%`, width: '100%' }} />}
-                        containerElement={<div style={{ height: `100%`, width: `100%` }} />}
-                        mapElement={<div style={{ height: `100%`, width: `100%` }} />} />
+                < Grid className='map_Grid' style={{ width: "95%", height: "95%", textAlign: 'center' }}>
+                    {
+                        placeName && force == 'got_new_data_for_new_map' &&
+                        <Typography id='current_view'>You are currently viewing :&nbsp;&nbsp;{placeName}</Typography>
+                    }
+                    {
+                        WrappedMap &&
+                        <WrappedMap googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_API_KEY
+                            }`}
+                            loadingElement={<div style={{ height: `100%`, width: '100%' }} />}
+                            containerElement={<div style={{ height: `80%`, width: `100%` }} />}
+                            mapElement={<div style={{ height: `100%`, width: `100%`, borderRadius: '20px' }} />} />
+                    }
+
                 </Grid>
             }
 
