@@ -16,10 +16,11 @@ function Map() {
 
 function Dashboard(props) {
 
-    const [data, setdata] = useState([])
+    const [data, setdata] = useState([]);
+    const [dismaps, setdismaps] = useState([]);
     const [LAT, setlat] = useState(null);
     const [LNG, setlng] = useState(null);
-    const [showcities, setshowcities] = useState(false);
+    const [showcities, setshowcities] = useState(true);
     let placeName = "Gujarat";
     //rendering the map component as a seperate custom hook component
     const WrappedMap = withScriptjs(withGoogleMap(Map));
@@ -73,8 +74,18 @@ function Dashboard(props) {
         //storing the lat and longs in local storage
     }, [data, LAT, LNG])
 
-    const ShowCities = () => {
-
+    const pickCityGetDistrict = (str) => {
+        setshowcities(false);
+        var res = str, district = [];
+        if (data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].state == res) {
+                    district = [...district, ...data[i].districts];
+                }
+            }
+        }
+        if (district)
+            setdismaps(district);
     }
     const logout_option = () => {
         window.location.assign('/logout');
@@ -84,20 +95,25 @@ function Dashboard(props) {
             <div id='nav'>
 
                 {window.innerWidth > 768
-                    && <div><Typography className='typo'><i style={{ color: 'white' }}>{props.match.params.name}</i>&nbsp;</Typography>
-                        <p style={{ fontFamily: 'ITC Charter', color: 'white' }}>{localStorage.getItem('email_id')}</p></div>
+                    && <div><Typography className='typo'><i style={{ color: 'black' }}>{props.match.params.name}</i>&nbsp;</Typography>
+                        <p style={{ fontFamily: 'ITC Charter', color: 'black' }}>{localStorage.getItem('email_id')}</p></div>
                 }
                 {window.innerWidth < 768 &&
-                    <div><Typography className='typo'><i style={{ color: 'white' }}>{props.match.params.name}</i>&nbsp;</Typography>
-                        <p style={{ fontFamily: 'ITC Charter', fontSize: '16px !important', color: 'white' }}>{localStorage.getItem('email_id')}</p></div>
+                    <div><Typography className='typo'><i style={{ color: 'black' }}>{props.match.params.name}</i>&nbsp;</Typography>
+                        <p style={{ fontFamily: 'ITC Charter', fontSize: '16px !important', color: 'black' }}>{localStorage.getItem('email_id')}</p></div>
                 }
                 {data &&
-                    <span style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        <p onClick={() => { setshowcities(true); ShowCities(); }} id='explore_typo'>
-                            {window.innerWidth > 768 ? 'Pick to Explore' : 'Explore'}
+                    <span style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <p onClick={() => {
+                            if (!showcities)
+                                setshowcities(true);
+                            if (showcities)
+                                setshowcities(false)
+                        }} id='explore_typo'>
+                            {window.innerWidth > 768 ? 'Choose to Explore' : 'Explore'}
                         </p>
-                        {!showcities && <ArrowDropDownIcon style={{ color: 'white' }} />}
-                        {showcities && <ArrowDropUpIcon style={{ color: 'white' }} />}
+                        {!showcities && <ArrowDropDownIcon />}
+                        {showcities && <ArrowDropUpIcon />}
 
 
                     </span>
@@ -111,20 +127,23 @@ function Dashboard(props) {
                 {data && showcities &&
                     <Grid className='states_grid' container style={{ textAlign: 'center' }}>
                         {data.map(item =>
-                            <Grid key={item.state} item sm={3} md={3}>
-                                <Typography className='typo_states'>{item.state}</Typography>
+                            <Grid key={item.state} item sm={3} md={3} xs={6}>
+                                <Typography onClick={() => { pickCityGetDistrict(item.state) }} className='typo_states'>{item.state}</Typography>
                             </Grid>
                         )}
                     </Grid>
                 }
+                {
+                    dismaps.length && !showcities &&
+                    <Grid container className='district_grid' style={{ textAlign: 'center' }}>
+                        {dismaps.map(item =>
+                            <Grid key={item} item sm={6} md={6} xs={6}>
+                                <Typography className='typo_districts'>{item}</Typography>
+                                <br /><br />
+                            </Grid>)}
+                    </Grid>
+                }
             </div>
-
-
-
-
-
-
-
 
 
 
