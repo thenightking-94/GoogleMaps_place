@@ -132,7 +132,7 @@ function Dashboard(props) {
 
                     </span>
                 }
-                <Avatar onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />
+                <Avatar title='Click to logout' onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />
             </div>
 
             <div className='bgimage'>
@@ -150,7 +150,7 @@ function Dashboard(props) {
                     dismaps.length && !showcities &&
                     <Grid container className='district_grid' style={{ textAlign: 'center' }}>
                         {dismaps.map(item =>
-                            <Grid key={item} item sm={6} md={6} xs={6}>
+                            <Grid key={item} item sm={6} md={6} xs={6} style={{ textAlign: '-webkit-center' }}>
                                 <Typography onClick={() => {
                                     setplaceName(item);
                                     setforce('filled_with_new_district');
@@ -186,7 +186,7 @@ function Dashboard(props) {
 
 
 
-
+            <span style={{ position: 'fixed', bottom: '2px', boxShadow: '5px 8px 10px #888', fontVariant: 'small-caps', color: 'white', width: '100%', background: 'black', height: '20px', textAlign: 'center' }} >© Shubham Chatterjee</span>
         </div >
     );
 

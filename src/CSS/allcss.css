@@ -142,7 +142,8 @@
 #explore_typo {
   color: black;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
 }
 .bgimage {
   background: url("../assets/bgimg.jpg");
@@ -168,6 +169,15 @@
   font-family: Georgia, "Times New Roman", Times, serif;
   font-variant: small-caps;
   cursor: pointer;
+  font-weight: 600 !important;
+}
+.typo_districts {
+  background: white;
+  border-radius: 5px;
+  text-align: center !important;
+  padding: 4px;
+  width: fit-content;
+  box-shadow: 5px 8px 10px #888;
 }
 .typo_states:hover,
 .typo_districts:hover {
@@ -209,7 +219,6 @@
 }
 .district_grid {
   align-items: center;
-  opacity: 0.75 !important;
   height: 80vh;
   overflow-y: auto;
   position: fixed;
@@ -219,7 +228,6 @@
   width: 48% !important;
   -webkit-animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  background-color: white;
   border-radius: 10px;
 }
 @media (max-width: 768px) {
@@ -257,15 +265,16 @@
   }
 }
 .district_grid::-webkit-scrollbar {
-  width: 8px;
+  width: 15px;
 }
 .district_grid::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background: black;
   border-radius: 10px;
+  width: 10px !important;
 }
 .district_grid::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: #e88d14;
+  background: #dcdcdc;
 }
 .map_Grid {
   align-items: center;
