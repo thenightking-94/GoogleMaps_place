@@ -2,23 +2,27 @@ import React, { useState, useEffect } from 'react';
 import '../CSS/allcss.css';
 import { Avatar, Divider, Typography } from '@material-ui/core';
 import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
+
+//seperate map component as a custom hook
 function Map() {
     return (
         <GoogleMap defaultZoom={7}
             defaultCenter={{ lat: Number(localStorage.getItem('lat')), lng: Number(localStorage.getItem('lng')) }} />
     )
 }
-//rendering the map component as a seperate component
-const WrappedMap = withScriptjs(withGoogleMap(Map));
 
 function Dashboard(props) {
 
     const [data, setdata] = useState([])
     const [LAT, setlat] = useState(null);
     const [LNG, setlng] = useState(null);
+    const [showcities, setshowcities] = useState(false);
     let placeName = "Gujarat";
-
+    //rendering the map component as a seperate custom hook component
+    const WrappedMap = withScriptjs(withGoogleMap(Map));
     useEffect(() => {
         let mydata = fetch('/artivatic.json',
             {
@@ -69,7 +73,9 @@ function Dashboard(props) {
         //storing the lat and longs in local storage
     }, [data, LAT, LNG])
 
+    const ShowCities = () => {
 
+    }
     const logout_option = () => {
         window.location.assign('/logout');
     }
@@ -83,25 +89,46 @@ function Dashboard(props) {
                 }
                 {window.innerWidth < 768 &&
                     <div><Typography className='typo'><i style={{ color: 'white' }}>{props.match.params.name}</i>&nbsp;</Typography>
-                        <p style={{ fontFamily: 'Helvetica', fontSize: '16px !important', color: 'white' }}>{localStorage.getItem('email_id')}</p></div>
+                        <p style={{ fontFamily: 'ITC Charter', fontSize: '16px !important', color: 'white' }}>{localStorage.getItem('email_id')}</p></div>
+                }
+                {data &&
+                    <span style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                        <p onClick={() => { setshowcities(true); ShowCities(); }} id='explore_typo'>
+                            {window.innerWidth > 768 ? 'Pick to Explore' : 'Explore'}
+                        </p>
+                        {!showcities && <ArrowDropDownIcon style={{ color: 'white' }} />}
+                        {showcities && <ArrowDropUpIcon style={{ color: 'white' }} />}
+
+
+                    </span>
                 }
                 <Avatar onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />
             </div>
 
-            <Divider style={{ height: '150px', background: 'transparent' }} />
+
+            <div className='bgimage'>
+
+            </div>
 
 
 
 
-            <div style={{ width: "500px", height: "500px" }}>
+
+
+
+
+
+
+
+            {/* <div style={{ width: "500px", height: "500px" }}>
                 <WrappedMap googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.REACT_APP_API_KEY
                     }`}
                     loadingElement={<div style={{ height: `500px`, width: '500px' }} />}
                     containerElement={<div style={{ height: `500px`, width: `500px` }} />}
                     mapElement={<div style={{ height: `500px`, width: `500px` }} />} />
-            </div>
+            </div>*/}
 
-        </div>
+        </div >
     );
 
 

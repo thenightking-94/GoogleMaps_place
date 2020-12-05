@@ -139,3 +139,22 @@
   font-weight: 600;
   font-variant: small-caps;
 }
+#explore_typo {
+  color: white;
+  cursor: pointer;
+}
+.bgimage {
+  background: url("../assets/bgimg.jpg");
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+@media (max-width: 768px) {
+  .bgimage {
+    background: url("../assets/bgimg_mobile.jpg");
+  }
+  .typo {
+    font-size: 12px !important;
+  }
+}
