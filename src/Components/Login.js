@@ -39,7 +39,7 @@ function Login() {
     return (
         <div style={style}>
             <div style={{ background: 'transparent', marginTop: '40vh' }} />
-            <Typography id='msg' style={{ color: 'black', fontFamily: 'ITC Charter', fontVariant: 'small-caps', fontWeight: '600' }}>Hey ! Login to Explore with us</Typography>
+            <Typography id='msg' style={{ color: 'black', fontFamily: 'ITC Charter', fontVariant: 'small-caps', fontWeight: '600' }}>Hey ! Login to Explore </Typography>
             <div style={{ background: 'transparent', marginTop: '5vh' }} />
             <GoogleLogin
                 className='signInButton'
