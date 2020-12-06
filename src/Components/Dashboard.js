@@ -52,10 +52,7 @@ function Dashboard(props) {
     }, []);
 
     useEffect(() => {
-        if (LAT && placeName)
-            localStorage.setItem('lat', LAT);
-        if (LNG && placeName)
-            localStorage.setItem('lng', LNG);
+
 
         //using place Name to find out the lat and longitudes
         if ((force == 'filled_with_new_district' && placeName) || (force == 'filled_with_new_city' && placeName)) {
@@ -68,8 +65,13 @@ function Dashboard(props) {
             });
         }
         //rendering updted map after getting updated data for lat & long
-        if (force == 'got_new_data_for_new_map')
+        if (force == 'got_new_data_for_new_map' && LAT && LNG && placeName) {
             setupdatedmap(true);
+            localStorage.setItem('lat', LAT);
+            localStorage.setItem('lng', LNG);
+
+        }
+
 
     }, [LAT, LNG, placeName, force])
 
