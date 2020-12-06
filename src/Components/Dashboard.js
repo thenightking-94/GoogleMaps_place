@@ -92,8 +92,11 @@ function Dashboard(props) {
                 }
             }
         }
-        if (district)
+        if (district) {
+            district.sort((a, b) => { return (a.length - b.length) })
             setdismaps(district);
+        }
+
     }
     const getlang = () => {
         let lat, lng, placeId;
