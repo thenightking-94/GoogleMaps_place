@@ -29,6 +29,7 @@ function Dashboard(props) {
     const [placeName, setplaceName] = useState(null);
     const [force, setforce] = useState(null);
     const [mobile, setmobile] = useState(false);
+    const [updatedmap, setupdatedmap] = useState(false);
 
     useEffect(() => {
         let mydata = fetch('/artivatic.json',
@@ -66,6 +67,10 @@ function Dashboard(props) {
                 getlang();
             });
         }
+        //rendering updted map after getting updated data for lat & long
+        if (force == 'got_new_data_for_new_map')
+            setupdatedmap(true);
+
     }, [LAT, LNG, placeName, force])
 
     const pickCityGetDistrict = (str) => {
@@ -75,7 +80,7 @@ function Dashboard(props) {
         }
         if (mobile)
             setmobile(false);
-            
+
         setshowcities(false);
         var res = str, district = [];
         if (data) {
@@ -170,12 +175,12 @@ function Dashboard(props) {
             }
 
             {
-                placeName && !showcities && force != 'got_new_data_for_new_map' && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+                placeName && !showcities && force != 'got_new_data_for_new_map' && updatedmap && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
                 < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center', marginTop: '20%' }}>
                     <Loader type="Bars" color={window.innerWidth > 768 ? "#e88d14" : 'white'} height={80} width={80} />
                 </ Grid>
             }
-            {placeName && !showcities && force == 'got_new_data_for_new_map' && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+            {placeName && !showcities && force == 'got_new_data_for_new_map' && updatedmap && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
                 < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center' }}>
                     {
                         placeName && force == 'got_new_data_for_new_map' &&
