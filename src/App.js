@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Login from './Components/Login';
 import Dashboard from './Components/Dashboard';
 import Logout from './Components/Logout';
-
+import SearchMap from './Components/SearchMap';
 function App() {
   let [force, forcerender] = useState(0);
   useEffect(() => {
@@ -24,6 +24,7 @@ function App() {
         <Route exact path='/' component={Login} />
         <Route exact path='/dashboard/:name' component={Dashboard} />
         <Route exact path='/logout' component={Logout} />
+        <Route exact path="/search/:word" component={SearchMap} />
       </Switch>
     </div >
   );

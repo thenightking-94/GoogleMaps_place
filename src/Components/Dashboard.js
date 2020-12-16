@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../CSS/allcss.css';
 import { Avatar, Grid, Typography } from '@material-ui/core';
 import { GoogleMap, withGoogleMap, withScriptjs, Marker } from 'react-google-maps';
@@ -6,6 +6,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Loader from 'react-loader-spinner';
 import HomeIcon from '@material-ui/icons/Home';
+import { Redirect } from 'react-router-dom';
 
 //seperate map component as a custom hook
 function Map() {
@@ -30,6 +31,8 @@ function Dashboard(props) {
     const [placeName, setplaceName] = useState(null);
     const [force, setforce] = useState(null);
     const [mobile, setmobile] = useState(false);
+    const [search, setsearch] = useState(false);
+    let searchBar = useRef();
 
     const InitialsMobile = (str) => {
         let res = '', val = '';
@@ -143,9 +146,11 @@ function Dashboard(props) {
                         window.location.assign('/');
                     }} />
                 </div>
-                &nbsp;&nbsp;
-                <form className='form_search'>
-                    <input className='searchBox' type='text' placeholder='Search for Places....' />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <form className='form_search' onSubmit={() => {
+                    setsearch(true)
+                }}>
+                    <input ref={searchBar} className='searchBox' type='text' placeholder='Search for Places....' />
                 </form>
                 &nbsp;&nbsp;
                 {data &&
@@ -226,7 +231,8 @@ function Dashboard(props) {
                 </Grid>
             }
 
-
+            {search &&
+                <Redirect to={`/search/${searchBar.current.value}`} />}
 
 
             <span style={{ position: 'fixed', bottom: '2px', boxShadow: '5px 8px 10px #888', fontVariant: 'small-caps', color: 'white', width: '100%', background: 'black', height: '20px', textAlign: 'center' }} >© Shubham Chatterjee</span>
