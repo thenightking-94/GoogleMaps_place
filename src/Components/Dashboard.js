@@ -5,6 +5,7 @@ import { GoogleMap, withGoogleMap, withScriptjs, Marker } from 'react-google-map
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import Loader from 'react-loader-spinner';
+import HomeIcon from '@material-ui/icons/Home';
 
 //seperate map component as a custom hook
 function Map() {
@@ -20,7 +21,7 @@ const WrappedMap = withScriptjs(withGoogleMap(Map));
 
 //main method for rendering component
 function Dashboard(props) {
-
+    const [hover_on, sethover] = useState(false);
     const [data, setdata] = useState([]);
     const [dismaps, setdismaps] = useState([]);
     const [LAT, setlat] = useState(null);
@@ -29,6 +30,22 @@ function Dashboard(props) {
     const [placeName, setplaceName] = useState(null);
     const [force, setforce] = useState(null);
     const [mobile, setmobile] = useState(false);
+
+    const InitialsMobile = (str) => {
+        let res = '', val = '';
+        str += ' ';
+        for (var i = 0; i < str.length; i++) {
+            if (str[i] != ' ')
+                res += str[i];
+            else {
+                val += res[0];
+                res = '';
+            }
+
+
+        }
+        return val;
+    }
 
     useEffect(() => {
         let mydata = fetch('/artivatic.json',
@@ -54,7 +71,7 @@ function Dashboard(props) {
 
 
         //using place Name to find out the lat and longitudes
-        if ((force == 'filled_with_new_district' && placeName) || (force == 'filled_with_new_city' && placeName)) {
+        if ((force === 'filled_with_new_district' && placeName) || (force === 'filled_with_new_city' && placeName)) {
             const googleMapScript = document.createElement("script");
             googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&libraries=places`;
             googleMapScript.async = true;
@@ -64,11 +81,10 @@ function Dashboard(props) {
             });
         }
         //updating local storage values for the updated-rendered map after getting updated data for lat & long
-        if (force == 'got_new_data_for_new_map' && LAT && LNG && placeName) {
+        if (force === 'got_new_data_for_new_map' && LAT && LNG && placeName) {
             localStorage.setItem('lat', LAT);
             localStorage.setItem('lng', LNG);
         }
-
 
     }, [LAT, LNG, placeName, force])
 
@@ -84,7 +100,7 @@ function Dashboard(props) {
         var res = str, district = [];
         if (data) {
             for (var i = 0; i < data.length; i++) {
-                if (data[i].state == res) {
+                if (data[i].state === res) {
                     district = [...district, ...data[i].districts];
                 }
             }
@@ -120,17 +136,18 @@ function Dashboard(props) {
         window.location.assign('/logout');
     }
     return (
-        <div>
+        <div style={{ position: 'relative' }}>
             <div id='nav'>
-
-                {window.innerWidth > 768
-                    && <div><Typography className='typo'><i style={{ color: 'black' }}>{props.match.params.name}</i>&nbsp;</Typography>
-                        <p style={{ fontFamily: 'ITC Charter', color: 'black' }}>{localStorage.getItem('email_id')}</p></div>
-                }
-                {window.innerWidth < 768 &&
-                    <div><Typography className='typo'><i style={{ color: 'black' }}>{props.match.params.name}</i>&nbsp;</Typography>
-                        <p style={{ fontFamily: 'ITC Charter', fontSize: '16px !important', color: 'black' }}>{localStorage.getItem('email_id')}</p></div>
-                }
+                <div className="home_back">
+                    <HomeIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => {
+                        window.location.assign('/');
+                    }} />
+                </div>
+                &nbsp;&nbsp;
+                <form className='form_search'>
+                    <input className='searchBox' type='text' placeholder='Search for Places....' />
+                </form>
+                &nbsp;&nbsp;
                 {data &&
                     <span style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginLeft: window.innerWidth > 768 ? '-150px' : '0' }}>
                         <p onClick={() => {
@@ -146,9 +163,18 @@ function Dashboard(props) {
 
                     </span>
                 }
-                <Avatar title='Click to logout' onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />
-            </div>
 
+                <div id='logged_info'>
+                    {window.innerWidth > `${760}` && <Typography className='typo'><i style={{ color: 'black' }}>{props.match.params.name}</i></Typography>}
+                    &nbsp;&nbsp;
+                    {hover_on && window.innerWidth > `${760}` && <Typography style={{ background: 'red' }} className='logged_info'>Log out</Typography>}
+                    {!hover_on && window.innerWidth > `${760}` && <Typography className='logged_info'>Logged in</Typography>}
+                    &nbsp;&nbsp;
+                    {window.innerWidth > `${760}` && <Avatar onMouseOver={() => { sethover(true) }} onMouseLeave={() => { sethover(false) }} onClick={logout_option} style={{ cursor: 'pointer' }} src={`${localStorage.getItem('img_url')}`} />}
+                    {window.innerWidth < `${760}` && <Avatar onClick={logout_option} style={{ cursor: 'pointer', background: 'green' }} >{InitialsMobile(props.match.params.name)}</Avatar>}
+                </div>
+
+            </div>
             <div className='bgimage'>
             </div>
             {data && showcities &&
@@ -177,15 +203,15 @@ function Dashboard(props) {
             }
 
             {
-                placeName && !showcities && force != 'got_new_data_for_new_map' && LAT && LNG && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+                placeName && !showcities && force !== 'got_new_data_for_new_map' && LAT && LNG && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
                 < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center', marginTop: '20%' }}>
                     <Loader type="Bars" color={window.innerWidth > 768 ? "#e88d14" : 'white'} height={80} width={80} />
                 </ Grid>
             }
-            {placeName && !showcities && force == 'got_new_data_for_new_map' && LAT && LNG && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
+            { placeName && !showcities && force === 'got_new_data_for_new_map' && LAT && LNG && ((window.innerWidth < 768 && mobile) || (window.innerWidth > 768)) &&
                 < Grid className={window.innerWidth > 768 ? 'map_Grid' : 'map_Grid_mobile'} style={{ width: "95%", height: "95%", textAlign: 'center' }}>
                     {
-                        placeName && force == 'got_new_data_for_new_map' &&
+                        placeName && force === 'got_new_data_for_new_map' &&
                         <Typography id='current_view'>You are currently viewing :&nbsp;&nbsp;{placeName}</Typography>
                     }
                     {
